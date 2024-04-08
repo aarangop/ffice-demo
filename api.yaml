@@ -13,28 +13,28 @@ paths:
       requestBody:
         content:
           application/json:
-            schema: 
-              $ref: '#/components/schemas/FlightPlan'
+            schema:
+              $ref: "#/components/schemas/FlightPlan"
       responses:
-        '201':
+        "201":
           description: Flight plan created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FlightPlan'
-        '400':
-          description: Invalid flight plan data 
+                $ref: "#/components/schemas/FlightPlan"
+        "400":
+          description: Invalid flight plan data
     get:
-      summary: Retrieve all flight plans 
+      summary: Retrieve all flight plans
       responses:
-        '200':
+        "200":
           description: Array of flight plans
           content:
             application/json:
               schema:
                 type: array
-                items: 
-                  $ref: '#/components/schemas/FlightPlan'
+                items:
+                  $ref: "#/components/schemas/FlightPlan"
 
   /flightplans/{flightId}:
     get:
@@ -46,20 +46,74 @@ paths:
           schema:
             type: string
       responses:
-        '200': 
+        "200":
           description: Flight plan details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FlightPlan'
-        '404':
+                $ref: "#/components/schemas/FlightPlan"
+        "404":
           description: Flight plan not found
+  /routes:
+    get:
+      description: "All flight routes"
+      parameters: []
+      responses:
+        "200":
+          description: OK
+    post:
+      description: Save a new route
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FlightPlan"
+      responses:
+        "200":
+          description: OK
 
 components:
   schemas:
+    Location:
+      type: object
+      required:
+        - latitude
+        - longitude
+      properties:
+        latitude:
+          type: number
+          minimum: -90
+          maximum: 90
+          description: "Latitude"
+        longitude:
+          type: number
+          minimum: -180
+          maximum: 180
+          description: "Longitude"
+        altitude:
+          type: number
+          minimum: -5000
+          maximum: 200000
+          description: "Altitude in ft"
+    Waypoint:
+      type: object
+      required:
+        - waypointId
+      properties:
+        waypointId:
+          type: string
+          description: "Unique waypoint id"
+          maxLength: 5
+          minLength: 3
+        location:
+          $ref: "#/components/schemas/Location"
+    FlightRoute:
+      type: array
+      items:
+        $ref: "#/components/schemas/Waypoint"
     FlightPlan:
       type: object
-      required: 
+      required:
         - flightId
         - aircraftId
         - flightRules
@@ -68,7 +122,7 @@ components:
         - destination
         - altitude
         - estimatedElapsedTime
-        - status 
+        - status
       properties:
         flightId:
           type: string
@@ -85,29 +139,21 @@ components:
           properties:
             airport:
               type: string
-              format: icao 
+              format: icao
               description: ICAO code of the departure airport
             time:
               type: string
               format: date-time
               description: Departure time in ISO8601 format (UTC)
-        destination: 
-          # Similar structure as 'departure' 
+        destination:
+          # Similar structure as 'departure'
           type: object
           properties:
             airport:
               type: string
               format: icao
         route:
-          type: array
-          items:
-            type: object
-            properties:
-              type:
-                type: string
-                enum: [waypoint, airway]
-              id:
-                type: string
+          $ref: "#/components/schemas/FlightRoute"
         altitude:
           type: string
           description: Flight Level (e.g., FL350)
@@ -118,4 +164,4 @@ components:
         status:
           type: string
           enum: [pending, approved, rejected]
-          default: pending 
+          default: pending
