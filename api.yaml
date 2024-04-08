@@ -1,0 +1,121 @@
+openapi: 3.0.1
+info:
+  title: Simplified FF-ICE API
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000/api # Assuming Next.js local dev
+
+paths:
+  /flightplans:
+    post:
+      summary: Submit a new flight plan
+      requestBody:
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/FlightPlan'
+      responses:
+        '201':
+          description: Flight plan created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlightPlan'
+        '400':
+          description: Invalid flight plan data 
+    get:
+      summary: Retrieve all flight plans 
+      responses:
+        '200':
+          description: Array of flight plans
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/FlightPlan'
+
+  /flightplans/{flightId}:
+    get:
+      summary: Retrieve a specific flight plan
+      parameters:
+        - in: path
+          name: flightId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200': 
+          description: Flight plan details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlightPlan'
+        '404':
+          description: Flight plan not found
+
+components:
+  schemas:
+    FlightPlan:
+      type: object
+      required: 
+        - flightId
+        - aircraftId
+        - flightRules
+        - departure
+        - route
+        - destination
+        - altitude
+        - estimatedElapsedTime
+        - status 
+      properties:
+        flightId:
+          type: string
+          description: Unique identifier of the flight plan
+        aircraftId:
+          type: string
+          description: Unique identifier of the aircraft
+        flightRules:
+          type: string
+          enum: [IFR, VFR]
+          description: Indicates Instrument or Visual Flight Rules
+        departure:
+          type: object
+          properties:
+            airport:
+              type: string
+              format: icao 
+              description: ICAO code of the departure airport
+            time:
+              type: string
+              format: date-time
+              description: Departure time in ISO8601 format (UTC)
+        destination: 
+          # Similar structure as 'departure' 
+          type: object
+          properties:
+            airport:
+              type: string
+              format: icao
+        route:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum: [waypoint, airway]
+              id:
+                type: string
+        altitude:
+          type: string
+          description: Flight Level (e.g., FL350)
+        estimatedElapsedTime:
+          type: string
+          format: duration
+          description: Estimated flight time (ISO 8601 Duration format)
+        status:
+          type: string
+          enum: [pending, approved, rejected]
+          default: pending 
