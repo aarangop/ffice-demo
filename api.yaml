@@ -1,11 +1,22 @@
-openapi: 3.0.1
-info:
-  title: Simplified FF-ICE API
-  version: 1.0.0
-
+openapi: 3.0.0
 servers:
-  - url: http://localhost:3000/api # Assuming Next.js local dev
-
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/SMARTBEARD192M/FF-ICE_Demo/1.0.1
+info:
+  description: API for FF-ICE Demo App
+  version: "1.0.1"
+  title: FF-ICE Demo API
+  contact:
+    email: a.arango@tu-braunschweig.de
+  license:
+    name: Apache 2.0
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+tags:
+  - name: admins
+    description: Secured Admin-only calls
+  - name: developers
+    description: Operations available to regular developers
 paths:
   /flightplans:
     post:
@@ -61,17 +72,33 @@ paths:
       responses:
         "200":
           description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FlightRoute"
+      summary: Get all routes
+      tags:
+        - default
     post:
       description: Save a new route
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/FlightPlan"
+              $ref: "#/components/schemas/FlightRoute"
       responses:
         "200":
           description: OK
-
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  insertedId:
+                    type: string
+                    description: Id of the inserted record
 components:
   schemas:
     Location:
@@ -108,9 +135,17 @@ components:
         location:
           $ref: "#/components/schemas/Location"
     FlightRoute:
-      type: array
-      items:
-        $ref: "#/components/schemas/Waypoint"
+      type: object
+      required:
+        - routeId
+      properties:
+        routeId:
+          type: string
+          description: Route id
+        waypoints:
+          type: array
+          items:
+            $ref: "#/components/schemas/Waypoint"
     FlightPlan:
       type: object
       required:

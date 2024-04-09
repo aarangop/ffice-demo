@@ -1,7 +1,7 @@
 "use client";
 
 import PrimaryButton from "@/components/button/PrimaryButton";
-import { components } from "@/schema";
+import { components } from "@/lib/api/schema";
 import { useForm } from "react-hook-form";
 import DatePicker from "react-datepicker";
 import { useState } from "react";

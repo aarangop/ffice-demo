@@ -1,0 +1,19 @@
+version: "3.8" # Specify a recent docker-compose version
+
+services:
+  mongodb:
+    image: mongo # Use the name of the image you built
+    restart: always # Restart policy in case of failures
+    ports:
+      - 27017:27017
+    volumes:
+      - ./data/db:/data/db # Persist data in a local directory
+
+
+  # nextjs-app:
+  #   build:
+  #     context: ./ # The path to your Next.js project's Dockerfile
+  #   ports:
+  #     - 3000:3000 # Expose Next.js default port
+  #   depends_on:
+  #     - mongodb # Wait for the mongoDB service to start first
