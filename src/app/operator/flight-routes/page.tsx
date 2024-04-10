@@ -1,6 +1,8 @@
 "use client";
 
 import PrimaryButton from "@/components/button/PrimaryButton";
+import { client } from "@/lib/api";
+import { FlightRouteSchema } from "@/lib/api/schemas";
 import { retrieveRoutes, saveNewRoute } from "@/lib/serverActions/routes";
 import routeReducer, {
   IRouteState,
@@ -24,35 +26,28 @@ export default function FlightRoutesPage() {
   const router = useRouter();
   const {
     data: routes,
-    error,
     isLoading,
-  } = useQuery({ queryKey: ["routes"], queryFn: retrieveRoutes });
+    error,
+  } = client.flightRoutes.getFlightRoutes.useQuery(["flight-routes"]);
 
-  const postNewRoute = useMutation({
-    mutationFn: saveNewRoute,
+  const postNewRoute = client.flightRoutes.createFlightRoute.useMutation({
     mutationKey: ["routes"],
   });
 
   const [state, dispatch] = useReducer(routeReducer, routeInitialState);
 
-  const onNewRouteClicked = () => {
-    const newRoute = {
-      routeId: crypto.randomUUID(),
-      waypoints: [],
-    };
-    postNewRoute.mutate(newRoute);
-    dispatch({
-      type: RouteActionType.ADD_ROUTE,
-      payload: newRoute,
+  const onNewRouteClicked = async () => {
+    const newRoute = await postNewRoute.mutateAsync({
+      body: FlightRouteSchema.parse({ waypoints: [] }),
     });
-    router.push(`flight-routes/${newRoute.routeId}`);
+    router.push(`flight-routes/${newRoute.body.id}`);
   };
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-col p-2">
       <h1>Flight Routes</h1>
       <div className="flex flex-col">
-        {routes?.length != 0 &&
-          routes?.map((route) => <div>{route.routeId}</div>)}
+        {routes?.body.length != 0 &&
+          routes?.body.map((route) => <div>{route.id}</div>)}
       </div>
       <PrimaryButton
         title="New Route"

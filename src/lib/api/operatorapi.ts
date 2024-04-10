@@ -8,7 +8,7 @@ export const contract = c.router({
   flightRoutes: {
     getFlightRoutes: {
       method: "GET",
-      path: "/routes",
+      path: "/flight-routes",
       responses: {
         200: z.array(FlightRouteSchema),
         404: c.type<{ message: string }>(),
@@ -17,9 +17,10 @@ export const contract = c.router({
     },
     createFlightRoute: {
       method: "POST",
-      path: "/routes",
+      path: "/flight-routes",
       responses: {
         201: FlightRouteSchema,
+        400: c.type<{ message: string }>(),
       },
       body: FlightRouteSchema,
       summary: "Create a new flight route",

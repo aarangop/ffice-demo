@@ -565,6 +565,11 @@
   resolved "https://registry.yarnpkg.com/@ts-rest/next/-/next-3.41.2.tgz#9567e282bcaa22c4b17752425b779bb79a452a8e"
   integrity sha512-g5gEVYbAx6pZz5VdymlTE3P+YxJNU5P/HOwMgZK0Y0xmxkeqhKBPZ7fNpQ1T3djZBEUtc86IxACiAwX3mloKbw==
 
+"@ts-rest/react-query@^3.41.2":
+  version "3.41.2"
+  resolved "https://registry.yarnpkg.com/@ts-rest/react-query/-/react-query-3.41.2.tgz#58565b9a3a8145d04091b226cf447cb0d4a61ff9"
+  integrity sha512-eId5+RXtkmpP7RHHp2LBjE1G8akySZRQ8PRJfwVzuQE4OU6UKXrMGOZxiie/NurQIizs8+pRAU1FAMR7JhiFUg==
+
 "@ts-rest/serverless@^3.41.2":
   version "3.41.2"
   resolved "https://registry.yarnpkg.com/@ts-rest/serverless/-/serverless-3.41.2.tgz#936f2c837fe4e57ed9f7195ce084761a13c8704b"
