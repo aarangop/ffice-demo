@@ -6,6 +6,17 @@ const c = initContract();
 
 export const contract = c.router({
   flightRoutes: {
+    getFlightRoute: {
+      method: "GET",
+      path: "/flight-routes/:id",
+      pathParams: z.object({
+        id: z.coerce.number(),
+      }),
+      responses: {
+        200: FlightRouteSchema,
+      },
+      summary: "Get a single flight route",
+    },
     getFlightRoutes: {
       method: "GET",
       path: "/flight-routes",

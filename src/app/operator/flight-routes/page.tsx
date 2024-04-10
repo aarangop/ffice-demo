@@ -34,8 +34,6 @@ export default function FlightRoutesPage() {
     mutationKey: ["routes"],
   });
 
-  const [state, dispatch] = useReducer(routeReducer, routeInitialState);
-
   const onNewRouteClicked = async () => {
     const newRoute = await postNewRoute.mutateAsync({
       body: FlightRouteSchema.parse({ waypoints: [] }),
@@ -46,8 +44,7 @@ export default function FlightRoutesPage() {
     <div className="flex flex-col p-2">
       <h1>Flight Routes</h1>
       <div className="flex flex-col">
-        {routes?.body.length != 0 &&
-          routes?.body.map((route) => <div>{route.id}</div>)}
+        {!error && routes?.body.map((route) => <div>{route.id}</div>)}
       </div>
       <PrimaryButton
         title="New Route"

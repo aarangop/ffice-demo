@@ -6,11 +6,28 @@ import { createNextHandler } from "@ts-rest/serverless/next";
 const handler = createNextHandler(
   contract.flightRoutes,
   {
+    getFlightRoute: async (req) => {
+      const routeId = req.params.id;
+      const routeData = await prisma.flightRoute.findUnique({
+        where: { id: routeId },
+        include: { waypoints: true },
+      });
+      console.log(routeId);
+      if (routeData) {
+        return {
+          status: 200,
+          body: routeData,
+        };
+      }
+      return {
+        status: 404,
+        body: { message: `Route with id ${routeId} not found` },
+      };
+    },
     getFlightRoutes: async () => {
       const flightRoutes = await prisma.flightRoute.findMany({
         include: { waypoints: true },
       });
-      console.log(flightRoutes);
       return {
         status: 200,
         body: await prisma.flightRoute.findMany({
